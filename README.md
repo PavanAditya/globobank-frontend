@@ -1,4 +1,4 @@
-# globobank_frontend
+# GloboBank Frontend
 
 > A VueJS frontend written for displaying and maintaining the analytics data of GloboBank
 
