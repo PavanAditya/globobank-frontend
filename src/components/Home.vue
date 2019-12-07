@@ -9,14 +9,13 @@
 <script>
 import Transactions from './Transactions'
 import EditTransactions from './EditTransactions'
-  export default {
-    components: {
-      Transactions,
-      EditTransactions
-    }
+export default {
+  components: {
+    Transactions,
+    EditTransactions
   }
+}
 </script>
 
 <style lang="scss" scoped>
-
 </style>
