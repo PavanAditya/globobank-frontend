@@ -1,10 +1,8 @@
 <template>
-<v-app>
-  <div id="app">
-    <img src="./assets/logo.png">
-    <router-view/>
-  </div>
-</v-app>
+  <v-app id="app">
+    <!-- <img src="./assets/logo.png"> -->
+    <router-view />
+  </v-app>
 </template>
 
 <script>
@@ -23,9 +21,8 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
 .mdi {
-  font-family: "Material Design Icons", "materialdesignicons-webfont";
+  font-family: 'Material Design Icons', 'materialdesignicons-webfont';
 }
 </style>
