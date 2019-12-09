@@ -108,12 +108,23 @@ export default {
       { icon: 'mdi-help-circle', text: 'Help' }
     ]
   }),
+  computed: {
+    isLoggedin () {
+      return this.$store.getters.isLoggedin
+    }
+  },
   methods: {
     menuAction: function () {
       // TODO
     },
     showProfile: function () {
       alert('Profile Clicked')
+    }
+  },
+  mounted: function () {
+    console.log('Is User Logged In? ', this.isLoggedin)
+    if (!this.isLoggedin) {
+      this.$router.push({ path: '/login' })
     }
   }
 }

@@ -21,7 +21,7 @@
         <v-btn color="primary" v-on:click="login">Login</v-btn>
       </v-flex>
     </v-layout>
-    <v-snackbar :timeout="5000" :top="true" v-model="showAlert">{{ message }}</v-snackbar>
+    <v-snackbar :timeout="5000" :top="true" v-model="showAlert">{{ loginError }}</v-snackbar>
   </v-container>
 </template>
 
@@ -42,15 +42,28 @@ export default {
       passwordRules: [v => !!v || 'Password is Required']
     }
   },
+  computed: {
+    isLoggedIn () {
+      return this.$store.getters.isLoggedIn
+    },
+    loginError () {
+      return this.$store.getters.loginError
+    }
+  },
   methods: {
     login: function () {
       const vm = this
-      if (vm.password === 'test111') {
-        this.$router.push({ path: '/' })
-      } else {
-        vm.showAlert = true
-        vm.message = 'Email or Password is invalid'
+      const payload = {
+        email: this.email,
+        password: this.password
       }
+      this.$store.dispatch('loginUser', payload).then(() => {
+        if (vm.isLoggedIn) {
+          this.$router.push({ path: '/' })
+        } else {
+          vm.showAlert = true
+        }
+      })
     },
     cancel: function () {
       const vm = this
