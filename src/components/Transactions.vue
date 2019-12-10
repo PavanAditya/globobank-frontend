@@ -20,44 +20,40 @@
       v-bind:search="search"
       item-key="_id"
     >
-      <template slot="items" slot-scope="props">
-        <div>
-          <tr>
-            <td>
-              <v-edit-dialog>
-                {{ props.item.transactionDate }}
-                <v-text-field
-                  slot="input"
-                  label="Edit"
-                  v-model="props.item.transactionDate"
-                  single-line
-                ></v-text-field>
-              </v-edit-dialog>
-            </td>
-            <td class="text-xs-left">{{ props.item.transactionType }}</td>
-            <td
-              class="text-xs-left"
-              @click="props.expand = !props.expand"
-            >{{ props.item.description }}</td>
-            <td class="text-xs-right">{{ props.item.charge }}</td>
-            <td class="text-xs-right">{{ props.item.deposit }}</td>
-            <td class="text-xs-right">{{ props.item.balance }}</td>
-          </tr>
-        </div>
+      <template slot="items" slot-scope="{ props }">
+        <tr>
+          <td>
+            <v-edit-dialog lazy>
+              {{ props.item.transactionDate }}
+              <v-text-field
+                slot="input"
+                label="Edit"
+                v-model="props.item.transactionDate"
+                single-line
+              ></v-text-field>
+            </v-edit-dialog>
+          </td>
+          <td class="text-xs-right">{{ props.item.transactionType }}</td>
+          <td
+            class="text-xs-left"
+            @click="props.expanded = !props.expanded"
+          >{{ props.item.description }}</td>
+          <td class="text-xs-right">{{ props.item.charge }}</td>
+          <td class="text-xs-right">{{ props.item.deposit }}</td>
+          <td class="text-xs-right">{{ props.item.balance }}</td>
+        </tr>
       </template>
 
-      <template slot="expand" slot-scope="props">
-        <div>
-          <v-card class="pl-5">
-            <v-card-text class="text-xs-left">
-              <v-text-field label="Note" v-model="props.item.notes"></v-text-field>
-            </v-card-text>
-          </v-card>
-        </div>
+      <template slot="expand" slot-scope="{ props }">
+        <v-card flat class="pl-5">
+          <v-card-text class="text-xs-left">
+            <v-text-field label="Note" v-model="props.item.notes"></v-text-field>
+          </v-card-text>
+        </v-card>
       </template>
 
       <template slot="pageText" slot-scope="{ pageStart, pageStop }">
-        <div>From {{ pageStart }} to {{ pageStop }}</div>
+        From {{ pageStart }} to {{ pageStop }}
       </template>
     </v-data-table>
   </v-card>
@@ -76,6 +72,7 @@ export default {
       return this.$store.state.transactions.months
     },
     items () {
+      console.log(this.$store.getters.getTransactionsByMonth, 'uytgf')
       return this.$store.getters.getTransactionsByMonth
     },
     balanceCharges () {
@@ -91,8 +88,8 @@ export default {
       search: '',
       pagination: {},
       headers: [
-        { text: 'Date', align: 'center', sortable: false, value: 'date' },
-        { text: 'Type', align: 'center', sortable: false, value: 'type' },
+        { text: 'Date', align: 'center', sortable: false, value: 'transactionDate' },
+        { text: 'Type', align: 'center', sortable: false, value: 'transactionType' },
         { text: 'Description', align: 'center', sortable: false, value: 'description' },
         { text: 'Charge (-)', align: 'center', sortable: false, value: 'charge' },
         { text: 'Deposit (+)', align: 'center', sortable: false, value: 'deposit' },

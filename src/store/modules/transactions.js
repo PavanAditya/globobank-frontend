@@ -67,6 +67,23 @@ const actions = {
   },
   async gotoCurrentMonth ({ commit }) {
     commit('gotoCurrentMonth')
+  },
+  saveTransaction ({ commit, dispatch, state, rootState }, transaction) {
+    // Add the logged in userId to the transaction payload...
+    console.log(rootState, 'uyhg')
+    transaction.userId = rootState.users.userId
+
+    Vue.axios
+      .post('/transaction/new', transaction)
+      .then(resp => {
+        dispatch('getTransactionsByMonth').then(() => {
+          dispatch('getPreviousMonthsBalances')
+        })
+      })
+      .catch(err => {
+        console.log('Error saving transaction')
+        console.log(err)
+      })
   }
 }
 
@@ -107,10 +124,14 @@ const mutations = {
 }
 
 function mapTransaction (tx, state) {
+  console.log(tx.transactionDate, 'date')
+  console.log(tx.transactionType, 'type')
   const transDate = new Date(tx.transactionDate)
+  console.log(transDate.getMonth(), 'date format')
   const months = state.months
+  console.log(months[transDate.getMonth() + 1].abrev + '-' + transDate.getFullYear())
   let transactions = {
-    transactionDate: months[transDate.getUTCMonth() + 1].abrev + '-' + transDate.getUTCFullYear(),
+    transactionDate: months[transDate.getMonth() + 1].abrev + '-' + transDate.getFullYear(),
     transactionType: tx.transactionType,
     description: tx.description,
     charge: moneyFormatter(tx.charge),

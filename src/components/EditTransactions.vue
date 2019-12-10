@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-btn bottom color="orange" dark fab fixed right @click="dialog = !dialog">
+    <v-btn bottom color="orange" dark fab fixed right @click="showEditTransactionDialog">
       <v-icon>mdi-plus</v-icon>
     </v-btn>
     <v-dialog v-model="dialog" width="800px">
@@ -12,24 +12,34 @@
               <v-menu
                 ref="datePicker"
                 :close-on-content-click="false"
-                v-model="transactionDatePicker"
+                :return-value.sync="transactionDatePicker"
                 transition="scale-transition"
                 offset-y
-                :nudge-right="40"
                 max-width="290px"
                 min-width="290px"
               >
-                <v-text-field
-                  slot="activator"
-                  prepend-icon="event"
-                  label="Select Transaction Date"
-                  v-model="transaction.transactionDate"
-                  readonly
-                />
+                <template v-slot:activator="{ on }">
+                  <v-text-field
+                    v-model="transaction.transactionDate"
+                    label="Select Transaction Date"
+                    prepend-icon="event"
+                    readonly
+                    v-on="on"
+                  ></v-text-field>
+                </template>
                 <v-date-picker
                   v-model="transaction.transactionDate"
-                  v-on:input="$refs.datePicker.save(transaction.transactionDate)"
-                ></v-date-picker>
+                  type="date"
+                  no-title
+                  scrollable
+                >
+                  <v-spacer></v-spacer>
+                  <v-btn
+                    text
+                    color="primary"
+                    @click="$refs.datePicker.save(transaction.transactionDate)"
+                  >OK</v-btn>
+                </v-date-picker>
               </v-menu>
             </v-col>
             <v-col cols="12">
@@ -72,11 +82,7 @@
           <!-- <v-btn text color="primary">More</v-btn> -->
           <v-spacer />
           <v-btn text color="danger" @click="dialog = false">Cancel</v-btn>
-          <v-btn
-            text
-            color="primary"
-            @click="saveTransaction"
-          >Save</v-btn>
+          <v-btn text color="primary" @click="saveTransaction">Save</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -145,14 +151,13 @@ export default {
     saveTransaction: function () {
       console.log('Save Transaction Records')
 
-      // TODO: VueX actions are to be added
+      this.$store.dispatch('saveTransaction', this.transaction)
 
       this.dialog = false
     },
     showEditTransactionDialog: function () {
-
-      // this.transaction.transactionDate = thi
-
+      this.transaction.transactionDate = this.getCurrentDate()
+      this.dialog = true
     },
     getCurrentDate: function () {
       const dt = new Date(Date.now())
