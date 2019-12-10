@@ -71,6 +71,7 @@
           <v-img src="https://cdn.vuetifyjs.com/images/logos/logo.svg" alt="Vuetify" />
         </v-avatar>
       </v-btn>-->
+      <header-actions></header-actions>
     </v-app-bar>
     <v-content>
       <v-container class="fill-height" fluid>
@@ -86,6 +87,7 @@
 <script>
 import Transactions from './Transactions'
 import EditTransactions from './EditTransactions'
+import HeaderActions from './HeaderActions'
 
 export default {
   name: 'Home',
@@ -94,7 +96,8 @@ export default {
   },
   components: {
     Transactions,
-    EditTransactions
+    EditTransactions,
+    HeaderActions
   },
   data: () => ({
     dialog: false,
