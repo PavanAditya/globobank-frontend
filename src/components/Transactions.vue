@@ -76,7 +76,7 @@ export default {
       return this.$store.state.transactions.months
     },
     items () {
-      return this.$store.getters.transactionsByMonth
+      return this.$store.getters.getTransactionsByMonth
     },
     balanceCharges () {
       return this.$store.getters.balanceCharges
@@ -102,13 +102,13 @@ export default {
   },
   methods: {
     getTransactionsByMonth: function () {
-      this.$store.dispatch('getTransactionByMonth')
+      this.$store.dispatch('getTransactionsByMonth')
     },
     getPreviousMonthsBalances: function () {
       this.$store.dispatch('getPreviousMonthsBalances')
     },
     gotoMonth: function (increment) {
-      this.$store.dispatch('gotoMonth').then(() => {
+      this.$store.dispatch('gotoMonth', increment).then(() => {
         this.getPreviousMonthsBalances()
         this.getTransactionsByMonth()
       })

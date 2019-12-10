@@ -1,3 +1,5 @@
+import Vue from 'vue'
+
 const state = {
   months: [
     { name: 'Zero', abrev: 'ZZZ', index: '0' },
@@ -22,19 +24,43 @@ const state = {
 }
 
 const getters = {
-  transactionsByMonth: state => state.transactions,
+  getTransactionsByMonth: state => state.transactions,
   balanceCharges: state => state.balanceCharges,
   balanceDeposits: state => state.balanceDeposits
 }
 
 const actions = {
   getTransactionsByMonth ({ commit, state, rootState }, payload) {
-    commit('transactionsByMonth', [])
+    Vue.axios.get('/transaction/' + state.currentYear + '/' + state.currentMonth,
+      { headers: { 'userId': rootState.users.userId } })
+      .then((resp) => {
+        let data = resp.data.data
+        if (data && data.length > 0) {
+          console.log(data)
+          commit('getTransactionsByMonth', data)
+        }
+      })
+      .catch((err) => {
+        console.log(err)
+      })
   },
   getPreviousMonthsBalances ({ commit, state, rootState }, payload) {
-    commit('transactionsByMonth', [])
-    commit('balanceCharges', 0)
-    commit('balanceDeposits', 0)
+    console.log(rootState, 'rs')
+    Vue.axios.get('/transaction/balance/' + state.currentYear + '/' + state.currentMonth,
+      { headers: { 'userId': rootState.users.userId } })
+      .then((resp) => {
+        let data = resp.data.data
+        if (data && data.length > 0) {
+          commit('balanceCharges', data[0].charges)
+          commit('balanceDeposits', data[0].deposits)
+        } else {
+          commit('balanceCharges', 0)
+          commit('balanceDeposits', 0)
+        }
+      })
+      .catch((err) => {
+        console.log(err)
+      })
   },
   async gotoMonth ({ commit }, increment) {
     commit('gotoMonth', increment)
@@ -45,7 +71,7 @@ const actions = {
 }
 
 const mutations = {
-  transactionsByMonth (state, data) {
+  getTransactionsByMonth (state, data) {
     state.transactions = []
     if (data && data.length > 0) {
       data.forEach(tx => {
@@ -61,7 +87,8 @@ const mutations = {
     state.balanceDeposits = data
   },
   gotoMonth (state, increment) {
-    let newMonth = state.currentMonth += increment
+    console.log(state.currentMonth, increment)
+    let newMonth = state.currentMonth + increment
     if (newMonth > 12) {
       newMonth = 1
       state.currentYear += 1
@@ -69,6 +96,7 @@ const mutations = {
       newMonth = 12
       state.currentYear -= 1
     }
+    console.log(newMonth)
     state.currentMonth = newMonth
   },
   gotoCurrentMonth (state) {
@@ -93,9 +121,9 @@ function mapTransaction (tx, state) {
 }
 
 function moneyFormatter (amount) {
-  let formatter = new Intl.NumberFormatter('en-US', {
+  let formatter = new Intl.NumberFormat('en-IN', {
     style: 'currency',
-    currency: 'USD',
+    currency: 'INR',
     minimumFractionDigits: 2
   })
   return formatter.format(amount)

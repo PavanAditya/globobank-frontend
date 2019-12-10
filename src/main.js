@@ -4,16 +4,20 @@ import Vue from 'vue'
 import Vuetify from 'vuetify'
 import App from './App'
 import router from './router'
-import '@mdi/font/css/materialdesignicons.css'
-
 import store from './store'
+import axios from 'axios'
+
+import '@mdi/font/css/materialdesignicons.css'
 
 Vue.config.productionTip = false
 Vue.use(Vuetify, {
   iconfont: 'mdi'
 })
-export default new Vuetify({ })
+export default new Vuetify({})
 
+Vue.axios = Vue.prototype.$http = axios.create({
+  baseURL: 'http://localhost:3000/api/v1'
+})
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

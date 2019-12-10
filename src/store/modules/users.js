@@ -1,3 +1,5 @@
+import Vue from 'vue'
+
 const state = {
   email: '',
   userId: null,
@@ -12,13 +14,23 @@ const getters = {
 }
 
 const actions = {
-  loginUser ({ commit }, payload) {
-    if (payload.userId === 'testuser123@gmail.com' && payload.password === 'test111') {
-      payload.userId = '5765s765sas6576asjghjha8777'
-      commit('loginUser', payload)
-    } else {
-      commit('loginError')
-    }
+  async loginUser ({ commit }, payload) {
+    await Vue.axios.get('/user/email/' + payload.email)
+      .then((resp) => {
+        let data = resp.data.data
+        console.log(data)
+        if (data && data.length > 0) {
+          if (data[0].password === payload.password) {
+            payload.userId = data[0]._id
+            commit('loginUser', payload)
+          } else {
+            commit('LoginError')
+          }
+        }
+      })
+      .catch(() => {
+        commit('loginError')
+      })
   }
 }
 

@@ -58,6 +58,7 @@ export default {
         password: this.password
       }
       this.$store.dispatch('loginUser', payload).then(() => {
+        console.log(vm.isLoggedIn, payload)
         if (vm.isLoggedIn) {
           this.$router.push({ path: '/' })
         } else {

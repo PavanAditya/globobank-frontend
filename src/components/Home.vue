@@ -109,8 +109,8 @@ export default {
     ]
   }),
   computed: {
-    isLoggedin () {
-      return this.$store.getters.isLoggedin
+    isLoggedIn () {
+      return this.$store.getters.isLoggedIn
     }
   },
   methods: {
@@ -122,8 +122,8 @@ export default {
     }
   },
   mounted: function () {
-    console.log('Is User Logged In? ', this.isLoggedin)
-    if (!this.isLoggedin) {
+    console.log('Is User Logged In? ', this.isLoggedIn)
+    if (!this.isLoggedIn) {
       this.$router.push({ path: '/login' })
     }
   }
